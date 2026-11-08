@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import { GoogleGenAI } from '@google/genai';
@@ -14,12 +15,14 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json({ limit: '15mb' }));
 
-// Initialize GoogleGenAI if API key is provided
+// Securely read Gemini API key from environment variables (supporting both GEMINI_API_KEY and VITE_GEMINI_API_KEY)
+const GEMINI_KEY = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY || '';
+
 let aiClient: GoogleGenAI | null = null;
-if (process.env.GEMINI_API_KEY) {
+if (GEMINI_KEY) {
   try {
     aiClient = new GoogleGenAI({
-      apiKey: process.env.GEMINI_API_KEY,
+      apiKey: GEMINI_KEY,
       httpOptions: {
         headers: {
           'User-Agent': 'aistudio-build',
@@ -63,7 +66,7 @@ function getFallbackDiagnosis(question: string): { analysis: string; edibilityWa
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', hasApiKey: !!process.env.GEMINI_API_KEY });
+  res.json({ status: 'ok', hasApiKey: !!GEMINI_KEY });
 });
 
 // Chat endpoint
@@ -92,7 +95,6 @@ You know deep details about:
 
 Keep your answers structured, informative, engaging, and concise.`;
 
-    // Construct contents with optional history
     const contents: any[] = [];
     if (Array.isArray(history)) {
       for (const item of history.slice(-6)) {
@@ -141,7 +143,6 @@ app.post('/api/gemini/diagnose', async (req, res) => {
       return;
     }
 
-    // Clean base64 prefix if passed
     const cleanBase64 = imageBase64.replace(/^data:image\/[a-zA-Z]+;base64,/, '');
 
     const promptText = `Examine this mushroom or cultivation photograph as a specialist mycologist.
@@ -184,8 +185,6 @@ Be objective, clear, and prioritize safety.`;
 
 // Feedback endpoint
 app.post('/api/feedback', (req, res) => {
-  const { rating, feedback, email } = req.body;
-  // Acknowledge feedback
   res.json({ success: true, message: 'Thank you for your valuable feedback to Fungipedia!' });
 });
 
@@ -199,7 +198,12 @@ async function startServer() {
     });
     app.use(vite.middlewares);
   } else {
-    const distPath = path.join(__dirname, 'dist');
+    // In production, when bundled into dist/server.js, the static files are in the same folder (__dirname)
+    // When running unbundled via tsx server.ts, they are in path.join(__dirname, 'dist')
+    const distPath = fs.existsSync(path.join(__dirname, 'index.html'))
+      ? __dirname
+      : path.join(__dirname, 'dist');
+
     app.use(express.static(distPath));
     app.get('*', (req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));
