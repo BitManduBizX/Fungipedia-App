@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import { ANATOMY_PARTS } from '../data/anatomyData';
 import { AnatomyPart } from '../types/mycology';
-import { Volume2, Sparkles, AlertTriangle, Eye, RefreshCw } from 'lucide-react';
+import { Volume2, Sparkles, AlertTriangle, Eye, Layers } from 'lucide-react';
+
+const ANATOMY_PLATE_FALLBACK = 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Amanita_muscaria_anatomy.svg/1024px-Amanita_muscaria_anatomy.svg.png';
 
 export const AnatomyInteractive: React.FC = () => {
   const [selectedPart, setSelectedPart] = useState<AnatomyPart>(ANATOMY_PARTS[0]);
   const [showSporeDrift, setShowSporeDrift] = useState<boolean>(true);
   const [showDangerMarkers, setShowDangerMarkers] = useState<boolean>(false);
+  const [viewMode, setViewMode] = useState<'interactive' | 'plate'>('interactive');
+  const [plateSrc, setPlateSrc] = useState('/images/anatomy_plate.jpg');
 
   const speakTerm = (text: string) => {
     if ('speechSynthesis' in window) {
@@ -37,7 +41,29 @@ export const AnatomyInteractive: React.FC = () => {
         {/* Control Toolbar */}
         <div className="flex flex-wrap items-center justify-between gap-3 mb-6 p-3 rounded-xl bg-[#EAE6DC]/70 dark:bg-[#1E2520] border border-[#2C221E]/10 dark:border-[#EDE6DE]/10">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-medium text-[#2C221E]/70 dark:text-[#EDE6DE]/70">Simulation Controls:</span>
+            <div className="flex items-center gap-1 p-0.5 bg-white dark:bg-[#151A16] rounded-lg border border-[#2C221E]/10 dark:border-[#EDE6DE]/10">
+              <button
+                onClick={() => setViewMode('interactive')}
+                className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors ${
+                  viewMode === 'interactive'
+                    ? 'bg-[#2C221E] text-white dark:bg-[#EDE6DE] dark:text-[#121613]'
+                    : 'text-[#2C221E]/70 dark:text-[#EDE6DE]/70'
+                }`}
+              >
+                Interactive Vector
+              </button>
+              <button
+                onClick={() => setViewMode('plate')}
+                className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors ${
+                  viewMode === 'plate'
+                    ? 'bg-[#2C221E] text-white dark:bg-[#EDE6DE] dark:text-[#121613]'
+                    : 'text-[#2C221E]/70 dark:text-[#EDE6DE]/70'
+                }`}
+              >
+                Botanical Plate
+              </button>
+            </div>
+
             <button
               onClick={() => setShowSporeDrift(!showSporeDrift)}
               className={`px-3 py-1.5 text-xs font-semibold rounded-lg flex items-center gap-1.5 transition-colors ${
@@ -72,146 +98,158 @@ export const AnatomyInteractive: React.FC = () => {
         {/* 2-Column Interactive Canvas + Concept Deck */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
           {/* Left Visual Interactive Stage */}
-          <div className="lg:col-span-7 rounded-2xl bg-[#F7F4EC] dark:bg-[#121613] border border-[#2C221E]/10 dark:border-[#EDE6DE]/10 p-4 sm:p-6 flex flex-col items-center justify-center relative overflow-hidden shadow-inner">
-            {/* SVG Interactive Canvas */}
-            <div className="relative w-full max-w-[480px] aspect-[4/5] flex items-center justify-center">
-              <svg viewBox="0 0 500 520" className="w-full h-full drop-shadow-sm select-none">
-                <defs>
-                  {/* Gradients for anatomy */}
-                  <radialGradient id="capGrad" cx="50%" cy="30%" r="70%">
-                    <stop offset="0%" stopColor="#E26D46" />
-                    <stop offset="70%" stopColor="#B84A28" />
-                    <stop offset="100%" stopColor="#8A2E16" />
-                  </radialGradient>
-                  <linearGradient id="stipeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#F5F0E6" />
-                    <stop offset="50%" stopColor="#FFFDF9" />
-                    <stop offset="100%" stopColor="#E6DECE" />
-                  </linearGradient>
-                  <linearGradient id="soilGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stopColor="#4A3B32" />
-                    <stop offset="100%" stopColor="#2A1E18" />
-                  </linearGradient>
-                </defs>
-
-                {/* Soil Cross Section at the Bottom */}
-                <rect x="20" y="400" width="460" height="110" rx="12" fill="url(#soilGrad)" opacity="0.85" />
-                <text x="35" y="425" fill="#C5B5A5" fontSize="11" fontFamily="sans-serif" opacity="0.8">
-                  Subterranean Humus & Soil Layer
-                </text>
-
-                {/* Underground Mycelial Hyphae Network Threads */}
-                <g stroke="#E8E0D5" strokeWidth="1.5" strokeLinecap="round" opacity="0.85" className="animate-pulse">
-                  <path d="M 250 410 Q 230 430 200 450 T 130 480 M 200 450 Q 170 470 120 495" fill="none" />
-                  <path d="M 250 410 Q 280 435 320 460 T 400 485 M 320 460 Q 360 480 430 500" fill="none" />
-                  <path d="M 250 410 Q 240 450 245 490 T 235 510 M 245 470 Q 270 490 290 510" fill="none" />
-                  <path d="M 210 440 Q 180 430 150 445 T 70 460" fill="none" />
-                  <path d="M 290 440 Q 330 430 370 445 T 440 460" fill="none" />
-                </g>
-
-                {/* Volva / Bulbous Cup at Base */}
-                <path
-                  d="M 210 415 C 205 385 220 370 235 370 C 245 370 255 370 265 370 C 280 370 295 385 290 415 Z"
-                  fill="#D4C8B5"
-                  stroke="#968571"
-                  strokeWidth="2"
-                  className={selectedPart.id === 'volva' ? 'stroke-[#A23B2A] stroke-[3]' : ''}
+          <div className="lg:col-span-7 rounded-2xl bg-[#F7F4EC] dark:bg-[#121613] border border-[#2C221E]/10 dark:border-[#EDE6DE]/10 p-4 sm:p-6 flex flex-col items-center justify-center relative overflow-hidden shadow-inner min-h-[460px]">
+            {viewMode === 'plate' ? (
+              <div className="relative w-full h-full max-w-[480px] rounded-xl overflow-hidden shadow-md flex items-center justify-center bg-[#FAF7F0] dark:bg-[#191F1A]">
+                <img
+                  src={plateSrc}
+                  onError={() => {
+                    if (plateSrc !== ANATOMY_PLATE_FALLBACK) {
+                      setPlateSrc(ANATOMY_PLATE_FALLBACK);
+                    }
+                  }}
+                  alt="Scientific botanical illustration of mushroom cross section"
+                  className="w-full h-auto max-h-[460px] object-contain rounded-lg"
+                  referrerPolicy="no-referrer"
                 />
+              </div>
+            ) : (
+              <div className="relative w-full max-w-[480px] aspect-[4/5] flex items-center justify-center">
+                <svg viewBox="0 0 500 520" className="w-full h-full drop-shadow-sm select-none">
+                  <defs>
+                    <radialGradient id="capGrad" cx="50%" cy="30%" r="70%">
+                      <stop offset="0%" stopColor="#E26D46" />
+                      <stop offset="70%" stopColor="#B84A28" />
+                      <stop offset="100%" stopColor="#8A2E16" />
+                    </radialGradient>
+                    <linearGradient id="stipeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#F5F0E6" />
+                      <stop offset="50%" stopColor="#FFFDF9" />
+                      <stop offset="100%" stopColor="#E6DECE" />
+                    </linearGradient>
+                    <linearGradient id="soilGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#4A3B32" />
+                      <stop offset="100%" stopColor="#2A1E18" />
+                    </linearGradient>
+                  </defs>
 
-                {/* Stipe (Stem) */}
-                <path
-                  d="M 235 180 C 235 240 230 330 225 395 C 240 400 260 400 275 395 C 270 330 265 240 265 180 Z"
-                  fill="url(#stipeGrad)"
-                  stroke="#B5A997"
-                  strokeWidth="1.5"
-                />
+                  {/* Soil Cross Section */}
+                  <rect x="20" y="400" width="460" height="110" rx="12" fill="url(#soilGrad)" opacity="0.85" />
+                  <text x="35" y="425" fill="#C5B5A5" fontSize="11" fontFamily="sans-serif" opacity="0.8">
+                    Subterranean Humus & Soil Layer
+                  </text>
 
-                {/* Annulus (Ring / Skirt) */}
-                <path
-                  d="M 226 240 C 210 255 205 265 220 268 C 235 270 265 270 280 268 C 295 265 290 255 274 240 Z"
-                  fill="#ECE4D6"
-                  stroke="#B0A08A"
-                  strokeWidth="1.5"
-                  className={selectedPart.id === 'annulus' ? 'stroke-[#3B6960] stroke-[3]' : ''}
-                />
-
-                {/* Gills (Lamellae) - radiating fine lines */}
-                <g stroke="#CFBFA8" strokeWidth="1.5" opacity="0.9">
-                  <path d="M 120 180 Q 180 185 235 180" fill="none" />
-                  <path d="M 140 170 Q 190 178 235 178" fill="none" />
-                  <path d="M 160 160 Q 200 170 235 176" fill="none" />
-                  <path d="M 380 180 Q 320 185 265 180" fill="none" />
-                  <path d="M 360 170 Q 310 178 265 178" fill="none" />
-                  <path d="M 340 160 Q 300 170 265 176" fill="none" />
-                </g>
-
-                {/* Cap (Pileus) Outer Dome */}
-                <path
-                  d="M 90 180 C 90 70 410 70 410 180 C 370 175 300 185 250 185 C 200 185 130 175 90 180 Z"
-                  fill="url(#capGrad)"
-                  stroke="#681F0E"
-                  strokeWidth="2.5"
-                  className={selectedPart.id === 'pileus' ? 'stroke-[#D96B43] stroke-[4]' : ''}
-                />
-
-                {/* Cap Warts / Scales (Velum universale remnants) */}
-                <ellipse cx="210" cy="115" rx="12" ry="8" fill="#FFFDF8" opacity="0.9" />
-                <ellipse cx="290" cy="115" rx="14" ry="9" fill="#FFFDF8" opacity="0.9" />
-                <ellipse cx="250" cy="90" rx="16" ry="10" fill="#FFFDF8" opacity="0.95" />
-                <ellipse cx="150" cy="140" rx="10" ry="7" fill="#FFFDF8" opacity="0.85" />
-                <ellipse cx="350" cy="140" rx="11" ry="8" fill="#FFFDF8" opacity="0.85" />
-
-                {/* Animated Spore Drift Particles */}
-                {showSporeDrift && (
-                  <g fill="#E09F3E" opacity="0.8">
-                    <circle cx="160" cy="205" r="2.5" className="animate-ping" />
-                    <circle cx="190" cy="220" r="2" />
-                    <circle cx="310" cy="210" r="2.5" className="animate-ping" />
-                    <circle cx="340" cy="225" r="2" />
-                    <circle cx="280" cy="235" r="3" />
-                    <circle cx="220" cy="230" r="2" />
-                    <circle cx="150" cy="245" r="1.5" />
-                    <circle cx="360" cy="250" r="2" />
+                  {/* Underground Mycelial Hyphae Network */}
+                  <g stroke="#E8E0D5" strokeWidth="1.5" strokeLinecap="round" opacity="0.85" className="animate-pulse">
+                    <path d="M 250 410 Q 230 430 200 450 T 130 480 M 200 450 Q 170 470 120 495" fill="none" />
+                    <path d="M 250 410 Q 280 435 320 460 T 400 485 M 320 460 Q 360 480 430 500" fill="none" />
+                    <path d="M 250 410 Q 240 450 245 490 T 235 510 M 245 470 Q 270 490 290 510" fill="none" />
+                    <path d="M 210 440 Q 180 430 150 445 T 70 460" fill="none" />
+                    <path d="M 290 440 Q 330 430 370 445 T 440 460" fill="none" />
                   </g>
-                )}
 
-                {/* Interactive Hotspot Targets */}
-                {ANATOMY_PARTS.map((part) => {
-                  const isSelected = selectedPart.id === part.id;
-                  const isDanger = (part.id === 'volva' || part.id === 'annulus') && showDangerMarkers;
+                  {/* Volva */}
+                  <path
+                    d="M 210 415 C 205 385 220 370 235 370 C 245 370 255 370 265 370 C 280 370 295 385 290 415 Z"
+                    fill="#D4C8B5"
+                    stroke="#968571"
+                    strokeWidth="2"
+                    className={selectedPart.id === 'volva' ? 'stroke-[#A23B2A] stroke-[3]' : ''}
+                  />
 
-                  return (
-                    <g
-                      key={part.id}
-                      className="cursor-pointer group"
-                      onClick={() => setSelectedPart(part)}
-                    >
-                      {/* Pulse Ring */}
-                      <circle
-                        cx={part.cx}
-                        cy={part.cy}
-                        r={isSelected ? 18 : 12}
-                        fill={isDanger ? '#A23B2A' : part.colorHex}
-                        opacity={isSelected ? 0.35 : 0.2}
-                        className={isSelected ? 'animate-ping' : ''}
-                      />
-                      {/* Inner Pin */}
-                      <circle
-                        cx={part.cx}
-                        cy={part.cy}
-                        r={isSelected ? 9 : 6}
-                        fill={isDanger ? '#A23B2A' : part.colorHex}
-                        stroke="#FFF"
-                        strokeWidth="2"
-                        className="transition-all duration-200 group-hover:scale-125"
-                      />
+                  {/* Stipe */}
+                  <path
+                    d="M 235 180 C 235 240 230 330 225 395 C 240 400 260 400 275 395 C 270 330 265 240 265 180 Z"
+                    fill="url(#stipeGrad)"
+                    stroke="#B5A997"
+                    strokeWidth="1.5"
+                  />
+
+                  {/* Annulus */}
+                  <path
+                    d="M 226 240 C 210 255 205 265 220 268 C 235 270 265 270 280 268 C 295 265 290 255 274 240 Z"
+                    fill="#ECE4D6"
+                    stroke="#B0A08A"
+                    strokeWidth="1.5"
+                    className={selectedPart.id === 'annulus' ? 'stroke-[#3B6960] stroke-[3]' : ''}
+                  />
+
+                  {/* Gills */}
+                  <g stroke="#CFBFA8" strokeWidth="1.5" opacity="0.9">
+                    <path d="M 120 180 Q 180 185 235 180" fill="none" />
+                    <path d="M 140 170 Q 190 178 235 178" fill="none" />
+                    <path d="M 160 160 Q 200 170 235 176" fill="none" />
+                    <path d="M 380 180 Q 320 185 265 180" fill="none" />
+                    <path d="M 360 170 Q 310 178 265 178" fill="none" />
+                    <path d="M 340 160 Q 300 170 265 176" fill="none" />
+                  </g>
+
+                  {/* Cap */}
+                  <path
+                    d="M 90 180 C 90 70 410 70 410 180 C 370 175 300 185 250 185 C 200 185 130 175 90 180 Z"
+                    fill="url(#capGrad)"
+                    stroke="#681F0E"
+                    strokeWidth="2.5"
+                    className={selectedPart.id === 'pileus' ? 'stroke-[#D96B43] stroke-[4]' : ''}
+                  />
+
+                  {/* Scales */}
+                  <ellipse cx="210" cy="115" rx="12" ry="8" fill="#FFFDF8" opacity="0.9" />
+                  <ellipse cx="290" cy="115" rx="14" ry="9" fill="#FFFDF8" opacity="0.9" />
+                  <ellipse cx="250" cy="90" rx="16" ry="10" fill="#FFFDF8" opacity="0.95" />
+                  <ellipse cx="150" cy="140" rx="10" ry="7" fill="#FFFDF8" opacity="0.85" />
+                  <ellipse cx="350" cy="140" rx="11" ry="8" fill="#FFFDF8" opacity="0.85" />
+
+                  {/* Spore Drift */}
+                  {showSporeDrift && (
+                    <g fill="#E09F3E" opacity="0.8">
+                      <circle cx="160" cy="205" r="2.5" className="animate-ping" />
+                      <circle cx="190" cy="220" r="2" />
+                      <circle cx="310" cy="210" r="2.5" className="animate-ping" />
+                      <circle cx="340" cy="225" r="2" />
+                      <circle cx="280" cy="235" r="3" />
+                      <circle cx="220" cy="230" r="2" />
+                      <circle cx="150" cy="245" r="1.5" />
+                      <circle cx="360" cy="250" r="2" />
                     </g>
-                  );
-                })}
-              </svg>
-            </div>
+                  )}
 
-            {/* Quick Part Navigation Chips below Diagram */}
+                  {/* Hotspots */}
+                  {ANATOMY_PARTS.map((part) => {
+                    const isSelected = selectedPart.id === part.id;
+                    const isDanger = (part.id === 'volva' || part.id === 'annulus') && showDangerMarkers;
+
+                    return (
+                      <g
+                        key={part.id}
+                        className="cursor-pointer group"
+                        onClick={() => setSelectedPart(part)}
+                      >
+                        <circle
+                          cx={part.cx}
+                          cy={part.cy}
+                          r={isSelected ? 18 : 12}
+                          fill={isDanger ? '#A23B2A' : part.colorHex}
+                          opacity={isSelected ? 0.35 : 0.2}
+                          className={isSelected ? 'animate-ping' : ''}
+                        />
+                        <circle
+                          cx={part.cx}
+                          cy={part.cy}
+                          r={isSelected ? 9 : 6}
+                          fill={isDanger ? '#A23B2A' : part.colorHex}
+                          stroke="#FFF"
+                          strokeWidth="2"
+                          className="transition-all duration-200 group-hover:scale-125"
+                        />
+                      </g>
+                    );
+                  })}
+                </svg>
+              </div>
+            )}
+
+            {/* Quick Part Navigation Chips */}
             <div className="flex flex-wrap items-center justify-center gap-1.5 mt-4 pt-4 border-t border-[#2C221E]/10 dark:border-[#EDE6DE]/10 w-full">
               {ANATOMY_PARTS.map((p) => (
                 <button
@@ -229,7 +267,7 @@ export const AnatomyInteractive: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Concept Deck: Active Anatomical Inspector */}
+          {/* Right Concept Deck */}
           <div className="lg:col-span-5 flex flex-col justify-between p-6 rounded-2xl bg-white dark:bg-[#191F1A] border border-[#2C221E]/10 dark:border-[#EDE6DE]/10 shadow-sm space-y-6">
             <div className="space-y-4">
               <div className="flex items-center justify-between">

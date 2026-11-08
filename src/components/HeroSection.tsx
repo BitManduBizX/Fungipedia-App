@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ArrowRight, Compass, Sprout, Sparkles, HelpCircle } from 'lucide-react';
 
 interface HeroSectionProps {
@@ -6,7 +6,11 @@ interface HeroSectionProps {
   onOpenTour: () => void;
 }
 
+const HERO_FALLBACK_URL = 'https://images.unsplash.com/photo-1542385151-efd9000785a0?auto=format&fit=crop&w=1600&q=80';
+
 export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenAI, onOpenTour }) => {
+  const [imgSrc, setImgSrc] = useState('/images/hero_forest.jpg');
+
   return (
     <section className="relative overflow-hidden pt-8 pb-12 sm:pt-12 sm:pb-16 border-b border-[#2C221E]/10 dark:border-[#EDE6DE]/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -69,15 +73,20 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenAI, onOpenTour }
 
           {/* Right Column: Visual Hero Photographic Showcase */}
           <div className="lg:col-span-5 relative">
-            <div className="relative rounded-2xl overflow-hidden shadow-lg border border-[#2C221E]/10 dark:border-[#EDE6DE]/10 group">
+            <div className="relative rounded-2xl overflow-hidden shadow-lg border border-[#2C221E]/10 dark:border-[#EDE6DE]/10 group bg-[#2C221E]/10">
               <img
-                src="/src/assets/images/hero_mycology_forest_1794137267214.jpg"
-                alt="Bioluminescent mushrooms and golden chanterelles thriving on a mossy forest floor"
+                src={imgSrc}
+                onError={() => {
+                  if (imgSrc !== HERO_FALLBACK_URL) {
+                    setImgSrc(HERO_FALLBACK_URL);
+                  }
+                }}
+                alt="Wild bioluminescent mushrooms and golden chanterelles thriving on a mossy forest floor"
                 className="w-full h-80 sm:h-96 object-cover transform group-hover:scale-102 transition-transform duration-700"
                 referrerPolicy="no-referrer"
               />
               {/* Measured contrast scrim */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex flex-col justify-end p-5 text-white">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex flex-col justify-end p-5 text-white pointer-events-none">
                 <span className="text-xs font-semibold text-[#E09F3E] tracking-wider uppercase">
                   Mycorrhizal Web & Bioluminescence
                 </span>

@@ -24,6 +24,7 @@ export const SPECIES_CATALOG: MushroomSpecies[] = [
     lookalikes: ['Angel Wings (Pleurocybella porrigens - toxic to kidneys)'],
     cautionaryNotes: 'Very safe to cultivate. In the wild, beware of white lookalikes growing on conifers.',
     description: 'The premier mushroom for beginner cultivators worldwide and the cornerstone of rural farming in Nepal. Fruits vigorously in clusters from pasteurized straw rolls.',
+    imageUrl: 'https://images.unsplash.com/photo-1595855759920-86582396756a?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 'king-oyster',
@@ -48,6 +49,7 @@ export const SPECIES_CATALOG: MushroomSpecies[] = [
     lookalikes: ['None in controlled indoor cultivation'],
     cautionaryNotes: 'Requires higher carbon dioxide levels during early pinhead development for thick, edible stems.',
     description: 'Prized for its thick, succulent culinary stipe. Unlike other oysters, the entire stem has a dense, steak-like texture favored in gastronomy.',
+    imageUrl: 'https://images.unsplash.com/photo-1589927986089-35812388d1f4?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 'shiitake',
@@ -72,6 +74,7 @@ export const SPECIES_CATALOG: MushroomSpecies[] = [
     lookalikes: ['Wild brown wood-rot mushrooms'],
     cautionaryNotes: 'Under-cooked shiitake can cause a rare whip-like skin rash (flagellate dermatitis) in sensitive individuals.',
     description: 'One of the oldest cultivated mushrooms on Earth. Renowned across Asia for immune vitality and deep savory broth seasoning.',
+    imageUrl: 'https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 'lions-mane',
@@ -96,6 +99,7 @@ export const SPECIES_CATALOG: MushroomSpecies[] = [
     lookalikes: ['Hericium coralloides (Coral tooth - also edible)'],
     cautionaryNotes: 'Virtually no toxic lookalikes due to its unique cascading icicle-like spines.',
     description: 'An iconic white cascading fungus revered by neuroscientists and gourmet chefs alike for its proven ability to stimulate brain nerve growth.',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Hericium_erinaceus_02.jpg/800px-Hericium_erinaceus_02.jpg',
   },
   {
     id: 'button-mushroom',
@@ -120,6 +124,7 @@ export const SPECIES_CATALOG: MushroomSpecies[] = [
     lookalikes: ['Agaricus xanthodermus (Yellow stainer - causes severe nausea)', 'Amanita bisporigera (Destroying Angel - DEADLY)'],
     cautionaryNotes: 'Never forage wild white mushrooms unless verified: deadly white Amanitas have white spores and a volva cup at the base.',
     description: 'The most widely consumed mushroom globally. White button, cremini, and portobello are all the same species harvested at different maturity stages.',
+    imageUrl: 'https://images.unsplash.com/photo-1506806732259-39c2d0268443?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 'golden-chanterelle',
@@ -144,6 +149,7 @@ export const SPECIES_CATALOG: MushroomSpecies[] = [
     lookalikes: ['Omphalotus illudens (Jack-O\'-Lantern - toxic with true gills, glows in dark)', 'Hygrophoropsis aurantiaca (False Chanterelle)'],
     cautionaryNotes: 'Chanterelles have blunt false gill ridges, not sharp blade-like gills. Never eat orange mushrooms growing directly on wood.',
     description: 'Cannot be cultivated in indoor bags because it requires living tree root partnerships. A culinary staple of wild autumn forest foraging.',
+    imageUrl: 'https://images.unsplash.com/photo-1601647998802-5c86158216f6?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 'morel',
@@ -168,6 +174,7 @@ export const SPECIES_CATALOG: MushroomSpecies[] = [
     lookalikes: ['Gyromitra esculenta (False Morel - contains toxic monomethylhydrazine rocket fuel precursor!)'],
     cautionaryNotes: 'CRITICAL: Never eat raw morels (causes gastrointestinal distress). True morels are completely hollow inside from tip to base.',
     description: 'Known as Guchhi Chhyau in Nepal, where it is a high-value export collected in pristine alpine hills. Its honeycomb cap is world-renowned.',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Morchella_esculenta_3_crop.jpg/800px-Morchella_esculenta_3_crop.jpg',
   },
   {
     id: 'cordyceps',
@@ -192,6 +199,7 @@ export const SPECIES_CATALOG: MushroomSpecies[] = [
     lookalikes: ['Cordyceps militaris (Cultivable cousin on rice/grain)'],
     cautionaryNotes: 'One of the most valuable biological commodities on Earth. Subject to strict government harvesting regulations and royalty taxes in Nepal.',
     description: 'Literally meaning "summer grass, winter worm" in Tibetan. Fungal spores infect ghost moth caterpillars underground, emerging in spring as a revered adaptogen.',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Ophiocordyceps_sinensis.jpg/800px-Ophiocordyceps_sinensis.jpg',
   },
   {
     id: 'reishi',
@@ -216,6 +224,7 @@ export const SPECIES_CATALOG: MushroomSpecies[] = [
     lookalikes: ['Other Ganoderma species (most non-toxic polypores)'],
     cautionaryNotes: 'Too woody to chew; must be decocted by simmering in water for 1–2 hours or extracted in alcohol.',
     description: 'Used for over 2,000 years in traditional Asian medicine. Its glossy red lacquered cap resembles polished mahogany with white growth margins.',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Ganoderma_lucidum_01.jpg/800px-Ganoderma_lucidum_01.jpg',
   },
   {
     id: 'death-cap',
@@ -240,6 +249,7 @@ export const SPECIES_CATALOG: MushroomSpecies[] = [
     lookalikes: ['Paddy straw mushroom (Volvariella volvacea)', 'Field mushroom (Agaricus campestris)', 'Caesar\'s mushroom buttons'],
     cautionaryNotes: 'RESPONSIBLE FOR 90% OF FATAL MUSHROOM POISONINGS WORLDWIDE. Even 30 grams (half a cap) is fatal to an adult. Heat-resistant amatoxins cannot be destroyed by boiling or cooking.',
     description: 'Features a pale greenish-olive cap, white gills, a prominent ring (annulus), and a sac-like cup (volva) buried at the subterranean base. Always inspect the base of every mushroom.',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Amanita_phalloides_1.JPG/800px-Amanita_phalloides_1.JPG',
   },
   {
     id: 'fly-agaric',
@@ -264,6 +274,7 @@ export const SPECIES_CATALOG: MushroomSpecies[] = [
     lookalikes: ['Amanita caesarea (Edible Caesar\'s mushroom - lacks white warts and has yellow gills)'],
     cautionaryNotes: 'The archetypal fairy tale mushroom with bright scarlet cap and white pyramidal warts. Contains potent GABAergic toxins.',
     description: 'Iconic red cap with white polka-dots seen in folklore and Mario video games. Highly toxic without specialized multi-boil detoxification.',
+    imageUrl: 'https://images.unsplash.com/photo-1542385151-efd9000785a0?auto=format&fit=crop&w=800&q=80',
   },
   {
     id: 'turkey-tail',
@@ -288,5 +299,6 @@ export const SPECIES_CATALOG: MushroomSpecies[] = [
     lookalikes: ['False Turkey Tail (Stereum ostrea - smooth underside without tiny pores)'],
     cautionaryNotes: 'True Turkey Tail has a velvety concentric zoned cap surface and a white/cream underside covered in tiny pore holes (3-8 pores per mm).',
     description: 'Characterized by concentric bands of blue, brown, amber, and cream mimicking a strutting turkey\'s tail feathers. Backed by dozens of clinical immune studies.',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Trametes_versicolor_G4.JPG/800px-Trametes_versicolor_G4.JPG',
   },
 ];

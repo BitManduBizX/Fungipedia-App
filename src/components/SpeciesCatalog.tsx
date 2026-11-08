@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { SPECIES_CATALOG } from '../data/speciesData';
 import { MushroomSpecies, EdibilityStatus } from '../types/mycology';
-import { Search, ShieldAlert, Sparkles, DollarSign, Bookmark, BookmarkCheck, X, AlertOctagon, CheckCircle2, Info } from 'lucide-react';
+import { Search, Sparkles, Bookmark, BookmarkCheck, X, AlertOctagon, CheckCircle2, Image as ImageIcon } from 'lucide-react';
 
 interface SpeciesCatalogProps {
   bookmarkedIds: string[];
@@ -19,10 +19,10 @@ export const SpeciesCatalog: React.FC<SpeciesCatalogProps> = ({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'edible' | 'medicinal' | 'toxic'>('all');
   const [activeModalSpecies, setActiveModalSpecies] = useState<MushroomSpecies | null>(null);
+  const [failedImages, setFailedImages] = useState<Record<string, boolean>>({});
 
   const filteredSpecies = useMemo(() => {
     return SPECIES_CATALOG.filter((s) => {
-      // Search matching
       const matchesSearch =
         s.commonName.toLowerCase().includes(searchQuery.toLowerCase()) ||
         s.scientificName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -31,7 +31,6 @@ export const SpeciesCatalog: React.FC<SpeciesCatalogProps> = ({
 
       if (!matchesSearch) return false;
 
-      // Filter category
       if (selectedFilter === 'edible') return s.edibility === 'choice_edible' || s.edibility === 'edible';
       if (selectedFilter === 'medicinal') return s.edibility === 'medicinal';
       if (selectedFilter === 'toxic') return s.edibility === 'toxic' || s.edibility === 'deadly';
@@ -91,7 +90,7 @@ export const SpeciesCatalog: React.FC<SpeciesCatalogProps> = ({
             Species Encyclopedia & 1kg Market Rates
           </h2>
           <p className="text-sm sm:text-base text-[#2C221E]/75 dark:text-[#EDE6DE]/75 mt-2">
-            Explore popular gourmet varieties, sacred Himalayan medicinals, and hazardous wild lookalikes. View wholesale market rates across USD, Nepalese Rupee (NPR), EUR, and INR.
+            Explore popular gourmet varieties, sacred Himalayan medicinals, and hazardous wild lookalikes with verified botanical imagery and regional market pricing.
           </p>
         </div>
 
@@ -179,35 +178,55 @@ export const SpeciesCatalog: React.FC<SpeciesCatalogProps> = ({
           {filteredSpecies.map((species) => {
             const isBookmarked = bookmarkedIds.includes(species.id);
             const isDeadly = species.edibility === 'deadly' || species.edibility === 'toxic';
+            const hasFailed = failedImages[species.id];
 
             return (
               <div
                 key={species.id}
-                className={`group flex flex-col justify-between p-5 rounded-xl transition-all duration-200 border ${
+                className={`group flex flex-col justify-between rounded-xl overflow-hidden transition-all duration-200 border ${
                   isDeadly
                     ? 'bg-[#FFF8F7] dark:bg-[#211616] border-[#A23B2A]/30 hover:border-[#A23B2A]/60'
                     : 'bg-white dark:bg-[#191F1A] border-[#2C221E]/10 dark:border-[#EDE6DE]/10 hover:border-[#D96B43]/40 dark:hover:border-[#E09F3E]/40 hover:shadow-md'
                 }`}
               >
-                <div className="space-y-3">
-                  {/* Top metadata line (clean unboxed text per Section 1.A) */}
-                  <div className="flex items-center justify-between gap-2">
+                {/* Visual Thumbnail */}
+                <div className="relative w-full h-44 bg-[#EAE6DC]/50 dark:bg-[#2C342D]/50 overflow-hidden">
+                  {species.imageUrl && !hasFailed ? (
+                    <img
+                      src={species.imageUrl}
+                      alt={species.commonName}
+                      onError={() => setFailedImages((prev) => ({ ...prev, [species.id]: true }))}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      referrerPolicy="no-referrer"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex flex-col items-center justify-center text-[#2C221E]/40 dark:text-[#EDE6DE]/40">
+                      <ImageIcon className="w-8 h-8 mb-1" />
+                      <span className="text-[11px] font-medium">{species.commonName}</span>
+                    </div>
+                  )}
+
+                  {/* Bookmark Button Overlay */}
+                  <button
+                    onClick={() => onToggleBookmark(species.id)}
+                    className="absolute top-3 right-3 p-1.5 rounded-lg bg-black/40 backdrop-blur-md text-white hover:bg-black/60 transition-colors shadow-sm"
+                    title={isBookmarked ? 'Remove Bookmark' : 'Bookmark to Journal'}
+                  >
+                    {isBookmarked ? (
+                      <BookmarkCheck className="w-4 h-4 text-[#E09F3E] fill-current" />
+                    ) : (
+                      <Bookmark className="w-4 h-4" />
+                    )}
+                  </button>
+
+                  {/* Edibility Indicator Scrim Badge */}
+                  <div className="absolute bottom-2 left-2 bg-black/60 backdrop-blur-md px-2 py-0.5 rounded text-white">
                     {getEdibilityBadge(species.edibility, species.edibilityLabel)}
-
-                    <button
-                      onClick={() => onToggleBookmark(species.id)}
-                      className="p-1.5 rounded-md hover:bg-[#EAE6DC]/60 dark:hover:bg-[#2C342D] text-[#2C221E]/50 dark:text-[#EDE6DE]/50 hover:text-[#D96B43] transition-colors"
-                      title={isBookmarked ? 'Remove Bookmark' : 'Bookmark to Journal'}
-                    >
-                      {isBookmarked ? (
-                        <BookmarkCheck className="w-4 h-4 text-[#D96B43] fill-current" />
-                      ) : (
-                        <Bookmark className="w-4 h-4" />
-                      )}
-                    </button>
                   </div>
+                </div>
 
-                  <div>
+                <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
+                  <div className="space-y-1.5">
                     <h3 className="font-display text-lg font-bold text-[#2C221E] dark:text-[#EDE6DE] group-hover:text-[#D96B43] dark:group-hover:text-[#E09F3E] transition-colors">
                       {species.commonName}
                     </h3>
@@ -215,37 +234,29 @@ export const SpeciesCatalog: React.FC<SpeciesCatalogProps> = ({
                       {species.scientificName}
                       {species.nepaliName && <span> · {species.nepaliName}</span>}
                     </p>
+                    <p className="text-xs text-[#2C221E]/75 dark:text-[#EDE6DE]/75 line-clamp-2 leading-relaxed pt-1">
+                      {species.description}
+                    </p>
                   </div>
 
-                  <p className="text-xs text-[#2C221E]/75 dark:text-[#EDE6DE]/75 line-clamp-2 leading-relaxed">
-                    {species.description}
-                  </p>
+                  {/* Bottom Card Footer: 1kg Price + Inspect Button */}
+                  <div className="flex items-center justify-between gap-2 pt-3 border-t border-[#2C221E]/10 dark:border-[#EDE6DE]/10">
+                    <div className="space-y-0.5">
+                      <span className="text-[10px] uppercase font-mono tracking-wider text-[#2C221E]/60 dark:text-[#EDE6DE]/60 block">
+                        1kg Market Rate
+                      </span>
+                      <span className="font-mono text-xs sm:text-sm font-semibold tabular-nums text-[#2C221E] dark:text-[#EDE6DE]">
+                        {getPriceDisplay(species)}
+                      </span>
+                    </div>
 
-                  {/* Clean unboxed key metadata */}
-                  <div className="flex flex-wrap items-center gap-1.5 text-xs text-[#2C221E]/60 dark:text-[#EDE6DE]/60 pt-2 border-t border-[#2C221E]/10 dark:border-[#EDE6DE]/10">
-                    <span>Spores: {species.sporePrintColor}</span>
-                    <span aria-hidden="true">·</span>
-                    <span>{species.family}</span>
+                    <button
+                      onClick={() => setActiveModalSpecies(species)}
+                      className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-[#EAE6DC] dark:bg-[#2C342D] text-[#2C221E] dark:text-[#EDE6DE] hover:bg-[#D96B43] hover:text-white dark:hover:bg-[#E09F3E] dark:hover:text-[#121613] transition-colors whitespace-nowrap"
+                    >
+                      View Details
+                    </button>
                   </div>
-                </div>
-
-                {/* Bottom Card Footer: 1kg Price + Inspect Button */}
-                <div className="flex items-center justify-between gap-2 pt-4 mt-4 border-t border-[#2C221E]/10 dark:border-[#EDE6DE]/10">
-                  <div className="space-y-0.5">
-                    <span className="text-[10px] uppercase font-mono tracking-wider text-[#2C221E]/60 dark:text-[#EDE6DE]/60 block">
-                      1kg Market Rate
-                    </span>
-                    <span className="font-mono text-xs sm:text-sm font-semibold tabular-nums text-[#2C221E] dark:text-[#EDE6DE]">
-                      {getPriceDisplay(species)}
-                    </span>
-                  </div>
-
-                  <button
-                    onClick={() => setActiveModalSpecies(species)}
-                    className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-[#EAE6DC] dark:bg-[#2C342D] text-[#2C221E] dark:text-[#EDE6DE] hover:bg-[#D96B43] hover:text-white dark:hover:bg-[#E09F3E] dark:hover:text-[#121613] transition-colors whitespace-nowrap"
-                  >
-                    View Details
-                  </button>
                 </div>
               </div>
             );
@@ -264,18 +275,30 @@ export const SpeciesCatalog: React.FC<SpeciesCatalogProps> = ({
                 <X className="w-5 h-5" />
               </button>
 
-              <div className="space-y-2 pr-8">
-                <div className="flex items-center gap-2">
-                  {getEdibilityBadge(activeModalSpecies.edibility, activeModalSpecies.edibilityLabel)}
-                  <span className="text-xs text-[#2C221E]/60 dark:text-[#EDE6DE]/60">·</span>
-                  <span className="text-xs text-[#2C221E]/60 dark:text-[#EDE6DE]/60">{activeModalSpecies.family}</span>
+              <div className="flex flex-col sm:flex-row gap-5 items-start">
+                {activeModalSpecies.imageUrl && (
+                  <div className="w-full sm:w-44 h-40 rounded-xl overflow-hidden shrink-0 bg-[#EAE6DC]/50 dark:bg-[#1E2520]">
+                    <img
+                      src={activeModalSpecies.imageUrl}
+                      alt={activeModalSpecies.commonName}
+                      className="w-full h-full object-cover"
+                      referrerPolicy="no-referrer"
+                    />
+                  </div>
+                )}
+                <div className="space-y-1.5 pr-8">
+                  <div className="flex items-center gap-2">
+                    {getEdibilityBadge(activeModalSpecies.edibility, activeModalSpecies.edibilityLabel)}
+                    <span className="text-xs text-[#2C221E]/60 dark:text-[#EDE6DE]/60">·</span>
+                    <span className="text-xs text-[#2C221E]/60 dark:text-[#EDE6DE]/60">{activeModalSpecies.family}</span>
+                  </div>
+                  <h3 className="font-display text-2xl font-bold text-[#2C221E] dark:text-[#EDE6DE]">
+                    {activeModalSpecies.commonName}
+                  </h3>
+                  <p className="text-sm italic font-serif text-[#D96B43] dark:text-[#E09F3E]">
+                    {activeModalSpecies.scientificName} {activeModalSpecies.nepaliName && `(${activeModalSpecies.nepaliName})`}
+                  </p>
                 </div>
-                <h3 className="font-display text-2xl font-bold text-[#2C221E] dark:text-[#EDE6DE]">
-                  {activeModalSpecies.commonName}
-                </h3>
-                <p className="text-sm italic font-serif text-[#D96B43] dark:text-[#E09F3E]">
-                  {activeModalSpecies.scientificName} {activeModalSpecies.nepaliName && `(${activeModalSpecies.nepaliName})`}
-                </p>
               </div>
 
               <p className="text-sm text-[#2C221E]/85 dark:text-[#EDE6DE]/85 leading-relaxed">
