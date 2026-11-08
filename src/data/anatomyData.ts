@@ -1,0 +1,88 @@
+import { AnatomyPart } from '../types/mycology';
+
+export const ANATOMY_PARTS: AnatomyPart[] = [
+  {
+    id: 'pileus',
+    name: 'Cap',
+    scientificTerm: 'Pileus',
+    pronunciation: 'PY-lee-uhs',
+    description: 'The broad, umbrella-like top canopy of the mushroom.',
+    function: 'Protects the delicate spore-producing gills underneath from heavy rainfall, intense sun radiation, and drying winds.',
+    microscopicDetail: 'Covered by the pileipellis (cuticle), often containing hydrophobic waxy coatings or gelatinous layers that shed water droplets.',
+    colorHex: '#D96B43', // Terracotta
+    cx: 260,
+    cy: 110,
+    labelX: 410,
+    labelY: 100,
+  },
+  {
+    id: 'lamellae',
+    name: 'Gills',
+    scientificTerm: 'Lamellae',
+    pronunciation: 'luh-MEL-ee',
+    description: 'Thin, vertical knife-like blades radiating outwards from the stem beneath the cap.',
+    function: 'Increases the surface area by up to 20x to house millions of microscopic spore-launching cells called basidia.',
+    microscopicDetail: 'Each basidium holds 4 tiny sterigmata. When humidity condenses a microscopic Buller\'s water drop, surface tension launches spores at thousands of Gs into the breeze!',
+    colorHex: '#E09F3E', // Gold
+    cx: 220,
+    cy: 180,
+    labelX: 410,
+    labelY: 165,
+  },
+  {
+    id: 'annulus',
+    name: 'Ring / Skirt',
+    scientificTerm: 'Annulus',
+    pronunciation: 'AN-yuh-luhs',
+    description: 'A membranous collar or skirt-like ring encircling the upper stipe.',
+    function: 'The anatomical remnant of the partial veil that guarded immature gills from crawling insects before the cap expanded.',
+    microscopicDetail: 'Can be persistent, fleeting, movable, or double-ringed. A key morphological diagnostic marker in species identification.',
+    colorHex: '#3B6960', // Teal Sage
+    cx: 250,
+    cy: 245,
+    labelX: 410,
+    labelY: 235,
+  },
+  {
+    id: 'stipe',
+    name: 'Stem / Stalk',
+    scientificTerm: 'Stipe',
+    pronunciation: 'STY-pe',
+    description: 'The rigid vertical stem elevating the cap high above ground level debris.',
+    function: 'Lifts the spore-bearing surface into higher laminar air currents, enabling fungal spores to be caught and carried miles away.',
+    microscopicDetail: 'Composed of longitudinally aligned parallel hyphae with thickened chitin cell walls, providing tremendous compressive strength.',
+    colorHex: '#4A7C59', // Forest Sage
+    cx: 250,
+    cy: 310,
+    labelX: 410,
+    labelY: 305,
+  },
+  {
+    id: 'volva',
+    name: 'Cup / Volva',
+    scientificTerm: 'Volva',
+    pronunciation: 'VOL-vuh',
+    description: 'The cup-like or sack-like sheath enclosing the swollen base of the stem.',
+    function: 'The remnant of the universal veil that enveloped the entire baby mushroom "egg" before emergence.',
+    microscopicDetail: 'CRUCIAL SAFETY MARKER: Present in the deadliest genus on Earth (Amanita). Often buried just below the forest humus line.',
+    colorHex: '#A23B2A', // Rust Red Warning
+    cx: 250,
+    cy: 380,
+    labelX: 410,
+    labelY: 375,
+  },
+  {
+    id: 'mycelium',
+    name: 'Mycelial Hyphae Network',
+    scientificTerm: 'Mycelium',
+    pronunciation: 'my-SEE-lee-um',
+    description: 'The vast subterranean root-like web of microscopic branching filaments (hyphae).',
+    function: 'The true living body of the fungus! Excretes digestive enzymes, absorbs organic nutrients, and connects trees in symbiotic forest networks.',
+    microscopicDetail: 'Individual hyphae are just 2–10 micrometers wide. A single cubic inch of fertile forest soil can contain over 8 miles of mycelial threads!',
+    colorHex: '#4A7C59', // Sage Green
+    cx: 250,
+    cy: 450,
+    labelX: 410,
+    labelY: 445,
+  },
+];
